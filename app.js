@@ -6,14 +6,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var index = require('./routes/index');
-var login = require('./routes/login');
+
+var routes = require('./routes/index');
+var apiRoutes = require('./routes/api');
 
 var app = express();
 
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'js');
-app.engine('js', require('express-react-views').createEngine());
+app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -25,8 +26,8 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', index);
-app.get('/login', login);
+app.use('/', routes);
+app.use('/api', apiRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -43,9 +44,8 @@ if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
-            status: err.status,
             message: err.message,
-            stack: err.stack
+            error: err
         });
     });
 }
@@ -55,9 +55,8 @@ if (app.get('env') === 'development') {
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-        status: err.status,
         message: err.message,
-        stack: undefined
+        error: {}
     });
 });
 
