@@ -1,11 +1,11 @@
-#!/usr/bin/env node
+'use strict';
 
 /**
  * Module dependencies.
  */
 
 var app = require('../app');
-var debug = require('debug')('src:server');
+var debug = require('debug')('sandbox.thesoda.io:server');
 var http = require('http');
 
 /**

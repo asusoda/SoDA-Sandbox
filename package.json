@@ -1,0 +1,49 @@
+{
+  "name": "soda-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "debug": "nodemon bin/www",
+    "start": "gulp clean; gulp; node dist/bin/www"
+  },
+  "dependencies": {
+    "babel-preset-es2015": "^6.14.0",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "express-react-views": "^0.10.2",
+    "morgan": "^1.7.0",
+    "pty.js": "^0.3.1",
+    "pug": "^2.0.0-beta6",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "serve-favicon": "^2.3.0",
+    "xterm": "^1.1.3"
+  },
+  "main": "app.js",
+  "directories": {},
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-react-jsx": "^6.8.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-clean": "^0.3.2",
+    "nodemon": "^1.10.2",
+    "webpack": "^1.13.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asusoda/SoDA-Sandbox.git"
+  },
+  "author": "Steve King Jr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/asusoda/SoDA-Sandbox/issues"
+  },
+  "homepage": "https://github.com/asusoda/SoDA-Sandbox#readme",
+  "description": ""
+}
