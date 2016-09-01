@@ -1,0 +1,49 @@
+extends layout
+
+block css
+    link(rel="stylesheet" type="text/css" href="/css/application.css")
+
+block content
+    nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
+        .container
+            .navbar-header
+                button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controles="navbar")
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+
+                a.navbar-brand(rel='home', title='Sandbox')
+                    img(src='/favicon.ico', style='height: 36px; margin-top: -8px')
+                a.navbar-brand(href="/") Sandbox
+            #navbar.navbar-collapse.collapse
+                ul.nav.navbar-nav.navbar-right
+                    li
+                        a(href="/login") Log In
+                    li.active
+                        a Sign Up
+
+    .container
+        .row
+            .col-sm-6.col-sm-offset-3.col-lg-4.col-lg-offset-4
+                .panel.panel-default
+                    .panel-body
+                        h1 Sign Up
+                        hr
+                        form(action="/sign_up" method="post")
+                            .form-group
+                                input#username.form-control(placeholder="Username" type="text" rows="1" name="username")
+                            .form-group
+                                input#password.form-control(placeholder="Password" type="password" rows="1" name="password")
+                            .form-group
+                                input#password_confirm.form-control(placeholder="Confirm Password" type="password" rows="1" name="password_confirm")
+                            label.form-group
+                                input#remember_me(type="checkbox" name="remember_me")
+                                |  Remember Me
+                            .row
+                                .col-xs-12
+                                    button.btn.btn-md.btn-primary.btn-block(type="submit") Submit
+
+block scripts
+    script(type="text/javascript").
+        $("#password, #password_confirm").tooltip({ 'trigger': 'focus', 'title': 'Must be alphanumeric, at least 8 characters, and may contain !@#$%^&*()', 'placement': 'right' });
