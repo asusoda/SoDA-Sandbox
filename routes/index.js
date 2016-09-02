@@ -20,7 +20,34 @@ router.get('/login', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    res.render('login', { title: 'Log In' });
+    var username = req.body.username.trim(),
+        password = req.body.password,
+        errors = [];
+
+    if (!username) {
+        errors.push('Username must not be blank');
+    }
+
+    if (!password) {
+        errors.push('Password must not be blank');
+    }
+
+    if (errors.length) {
+        res.status(401).render('login', { title: 'Log In', errors: errors });
+    }
+    else {
+        User.findOne({ username: username }, function (err, user) {
+            if (err) {
+                next(err, req, res, null);
+            }
+            else if (user && user.comparePassword(password)) {
+                res.send('OK');
+            }
+            else {
+                res.status(401).render('login', { title: 'Log In', errors: ['Invalid username or password'] });
+            }
+        });
+    }
 });
 
 router.get('/sign_up', (req, res, next) => {
@@ -63,7 +90,7 @@ router.post('/sign_up', (req, res, next) => {
     else {
         User.findOne({ username: username }, function(err, user) {
             if (err) {
-                throw err;
+                next(err, req, res, null);
             }
             else if (user) {
                 res.status = 401;
@@ -81,7 +108,7 @@ router.post('/sign_up', (req, res, next) => {
                     }
                 });
             }
-        })
+        });
     }
 });
 

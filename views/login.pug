@@ -1,5 +1,8 @@
 extends layout
 
+block css
+    link(rel="stylesheet" type="text/css" href="/css/application.css")
+
 block content
     nav.navbar.navbar-inverse.navbar-fixed-top(role="navigation")
         .container
@@ -27,17 +30,17 @@ block content
                     .panel-body
                         h1 Log In
                         hr
-                        form(action="/login")
+                        form(action="/login" method="post")
                             .form-group
-                                input#username.form-control(placeholder="Username" type="text" rows="1" autofocus="autofocus")
+                                input#username.form-control(placeholder="Username" type="text" rows="1" autofocus="autofocus" name="username")
                             .form-group
-                                input#password.form-control(placeholder="Password" type="password" rows="1")
+                                input#password.form-control(placeholder="Password" type="password" rows="1" name="password")
                             label.form-group
-                                input#remember-me(type="checkbox")
+                                input#remember_me(type="checkbox")
                                 |  Remember Me
                             .row
                                 .col-xs-6
-                                    button.btn.btn-md.btn-primary.btn-block(type="submit") Login
+                                    button.btn.btn-md.btn-primary.btn-block(type="submit") Log In
                                 .col-xs-6
                                     p
                                     h6.text-center
