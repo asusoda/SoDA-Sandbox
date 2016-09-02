@@ -7,6 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
+var session = require('cookie-session');
 
 var routes = require('./routes/index');
 var apiRoutes = require('./routes/api');
@@ -26,6 +27,11 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(helmet());
+app.set('trust proxy', 1);
+app.use(session({
+    secret: 'change me i\'m not really secret',
+    maxAge: 24 * 60 * 60 * 1000
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
