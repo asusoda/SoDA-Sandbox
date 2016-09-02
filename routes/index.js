@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../data');
+var auth = require('../auth');
 var User = models.User;
 
 const whitespace_regex = /\s/;
@@ -16,7 +17,12 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/login', (req, res, next) => {
-    res.render('login', { title: 'Log In' });
+    if (req.session.username && req.session.sessionID && auth.verifySessionID(req.session.username, req.session.sessionID)) {
+        res.send('OK')
+    }
+    else {
+        res.render('login', { title: 'Log In' });
+    }
 });
 
 router.post('/login', (req, res, next) => {
@@ -41,6 +47,8 @@ router.post('/login', (req, res, next) => {
                 next(err, req, res, null);
             }
             else if (user && user.comparePassword(password)) {
+                req.session.username = username;
+                req.session.sessionID = auth.generateSessionID(username);
                 res.send('OK');
             }
             else {
@@ -50,8 +58,18 @@ router.post('/login', (req, res, next) => {
     }
 });
 
+router.get('/logout', (req, res, next) => {
+    req.session = null;
+    res.redirect('/');
+});
+
 router.get('/sign_up', (req, res, next) => {
-    res.render('sign_up', { title: 'Sign Up' });
+    if (req.session.username && req.session.sessionID && auth.verifySessionID(req.session.username, req.session.sessionID)) {
+        res.send('OK')
+    }
+    else {
+        res.render('sign_up', { title: 'Sign Up' });
+    }
 });
 
 router.post('/sign_up', (req, res, next) => {
@@ -104,6 +122,8 @@ router.post('/sign_up', (req, res, next) => {
                         next(err, req, res, null);
                     }
                     else {
+                        req.session.username = username;
+                        req.session.sessionID = auth.generateSessionID(username);
                         res.send('OK');
                     }
                 });
