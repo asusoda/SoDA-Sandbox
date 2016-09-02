@@ -6,7 +6,7 @@ fs.readdirSync('node_modules').filter((x) => ['.bin'].indexOf(x) === -1)
                               .forEach((mod) => { nodeModules[mod] = 'commonjs ' + mod })
 
 module.exports = {
-    entry: './bin/www',
+    entry: './src/bin/www',
     target: 'node',
     node: {
         __filename: true,
