@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "debug": "nodemon bin/www",
+    "debug": "nodemon src/bin/www",
     "start": "gulp clean; gulp; node dist/bin/www"
   },
   "dependencies": {
