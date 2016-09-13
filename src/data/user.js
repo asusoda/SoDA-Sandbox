@@ -14,11 +14,6 @@ var UserSchema = new mongoose.Schema({
 
 UserSchema.set('collection', 'sandbox_users');
 
-// UserSchema.methods.setPassword = function(password) {
-//     var salt = bcrypt.genSaltSync(SALT_WORK_FACTOR);
-//     this.passwordHash = bcrypt.hashSync(password, salt);
-// };
-
 UserSchema.methods.setPassword = function(password) {
     return new Promise((resolve, reject) => {
         bcrypt.genSalt(10, (err, result) => {
@@ -37,10 +32,6 @@ UserSchema.methods.setPassword = function(password) {
         });
     });
 }
-
-// UserSchema.methods.comparePassword = function(candidatePassword) {
-//     return bcrypt.compareSync(candidatePassword, this.passwordHash);
-// }
 
 UserSchema.methods.comparePassword = function(candidatePassword) {
     return new Promise((resolve, reject) => {

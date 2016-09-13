@@ -69,24 +69,6 @@ router.post('/login', (req, res, next) => {
             .catch((err) => {
                 next(err, req, res, null);
             });
-        // User.findOne({
-        //     username: username
-        // }, function (err, user) {
-        //     if (err) {
-        //         next(err, req, res, null);
-        //     }
-        //     else if (user && user.comparePassword(password)) {
-        //         req.session.username = username;
-        //         req.session.sessionID = auth.generateSessionID(username);
-        //         res.send('OK');
-        //     }
-        //     else {
-        //         res.status(401).render('login', {
-        //             title: 'Log In',
-        //             errors: ['Invalid username or password']
-        //         });
-        //     }
-        // });
     }
 });
 
@@ -169,40 +151,6 @@ router.post('/sign_up', (req, res, next) => {
             .catch((err) => {
                 next(err, req, res, null);
             });
-        // User.findOne({$or: [{ username: username }, { emailAddress: email }]}, function(err, user) {
-        //     if (err) {
-        //         next(err, req, res, null);
-        //     }
-        //     else if (user) {
-        //         res.status = 401;
-        //         res.render('sign_up', { title: 'Sign Up', errors: ['Username or email already exists'] });
-        //     }
-        //     else {
-        //         var newUser = new User({ username: username, emailAddress: email });
-        //         newUser.setPassword(password);
-        //         newUser.save(function (err) {
-        //             if (err) {
-        //                 next(err, req, res, null);
-        //             }
-        //             else {
-        //                 request.post('http://localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, response, body) {
-        //                     if (err) {
-        //                         next(err, req, res);
-        //                     }
-        //                     else if (response.statusCode !== 201) {
-        //                         res.status = 500;
-        //                         res.render('sign_up', { 'title': 'Sign Up', errors: ['Could not create user; server erred when creating account'] });
-        //                     }
-        //                     else {
-        //                         req.session.username = username;
-        //                         req.session.sessionID = auth.generateSessionID(username);
-        //                         res.send('OK');
-        //                     }
-        //                 });
-        //             }
-        //         });
-        //     }
-        // });
     }
 });
 
