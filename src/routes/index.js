@@ -1,10 +1,12 @@
 'use strict';
 
+const Promise = require('bluebird');
 const express = require('express');
 const router = express.Router();
 const models = require('../data');
 const auth = require('../auth');
 const request = require('request');
+Promise.promisifyAll(request);
 const User = models.User;
 
 const whitespace_regex = /\s/;
@@ -14,15 +16,19 @@ const validate_password = (password) => password.search(password_regex) !== -1;
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Home' });
+    res.render('index', {
+        title: 'Home'
+    });
 });
 
 router.get('/login', (req, res, next) => {
     if (req.session.username && req.session.sessionID && auth.verifySessionID(req.session.username, req.session.sessionID)) {
-        res.send('OK')
+        res.redirect('/')
     }
     else {
-        res.render('login', { title: 'Log In' });
+        res.render('login', {
+            title: 'Log In'
+        });
     }
 });
 
@@ -40,22 +46,29 @@ router.post('/login', (req, res, next) => {
     }
 
     if (errors.length) {
-        res.status(401).render('login', { title: 'Log In', errors: errors });
+        res.status(401).render('login', {
+            title: 'Log In',
+            errors: errors
+        });
     }
     else {
-        User.findOne({ username: username }, function (err, user) {
-            if (err) {
+        User.findOne({ username: username })
+            .then((user) => {
+                if (user) {
+                    return user.comparePassword(password);
+                }
+                else {
+                    var err = new Error('User not found');
+                    err.status = 401;
+                    throw err;
+                }
+            })
+            .then((result) => {
+                res.send(result);
+            })
+            .catch((err) => {
                 next(err, req, res, null);
-            }
-            else if (user && user.comparePassword(password)) {
-                req.session.username = username;
-                req.session.sessionID = auth.generateSessionID(username);
-                res.send('OK');
-            }
-            else {
-                res.status(401).render('login', { title: 'Log In', errors: ['Invalid username or password'] });
-            }
-        });
+            });
     }
 });
 
@@ -66,10 +79,12 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/sign_up', (req, res, next) => {
     if (req.session.username && req.session.sessionID && auth.verifySessionID(req.session.username, req.session.sessionID)) {
-        res.send('OK')
+        res.redirect('/');
     }
     else {
-        res.render('sign_up', { title: 'Sign Up' });
+        res.render('sign_up', {
+            title: 'Sign Up'
+        });
     }
 });
 
@@ -83,7 +98,7 @@ router.post('/sign_up', (req, res, next) => {
     var is_password_valid = validate_password(password);
 
     if (!email) {
-      errors.push('Email must not be blank');
+        errors.push('Email must not be blank');
     }
 
     if (!username) {
@@ -108,44 +123,34 @@ router.post('/sign_up', (req, res, next) => {
 
     if (errors.length) {
         res.status = 401;
-        res.render('sign_up', { title: 'Sign Up', errors: errors });
+        res.render('sign_up', {
+            title: 'Sign Up',
+            errors: errors
+        });
     }
 
     else {
-        User.findOne({$or: [{ username: username }, { emailAddress: email }]}, function(err, user) {
-            if (err) {
+        User.findOne({ $or: [{username: username}, {emailAddress: email}] })
+            .then((user) => {
+                if (user) {
+                    throw new Error('Username or email already exists');
+                }
+                else {
+                    var newUser = new User({ username: username, emailAddress: email });
+                    return newUser.setPassword(password);
+                }
+            })
+            .then((user) => {
+                return user.save();
+            })
+            .then((user) => {
+                req.session.username = username;
+                req.session.sessionID = auth.generateSessionID(username);
+                res.redirect('/');
+            })
+            .catch((err) => {
                 next(err, req, res, null);
-            }
-            else if (user) {
-                res.status = 401;
-                res.render('sign_up', { title: 'Sign Up', errors: ['Username or email already exists'] });
-            }
-            else {
-                var newUser = new User({ username: username, emailAddress: email });
-                newUser.setPassword(password);
-                newUser.save(function (err) {
-                    if (err) {
-                        next(err, req, res, null);
-                    }
-                    else {
-                        request.post('http://localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, response, body) {
-                            if (err) {
-                                next(err, req, res);
-                            }
-                            else if (response.statusCode !== 201) {
-                                res.status = 500;
-                                res.render('sign_up', { 'title': 'Sign Up', errors: ['Could not create user; server erred when creating account'] });
-                            }
-                            else {
-                                req.session.username = username;
-                                req.session.sessionID = auth.generateSessionID(username);
-                                res.send('OK');
-                            }
-                        });
-                    }
-                });
-            }
-        });
+            });
     }
 });
 
