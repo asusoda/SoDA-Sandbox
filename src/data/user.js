@@ -8,7 +8,8 @@ const SALT_WORK_FACTOR = 10;
 var UserSchema = new mongoose.Schema({
     username: { type: String, required: true, index: { unique: true } },
     passwordHash: { type: String, required: true },
-    approved: { type: Boolean, required: true, default: false }
+    approved: { type: Boolean, required: true, default: false },
+    emailAddress: { type: String, requires: true, index: { unique: true } }
 });
 
 UserSchema.set('collection', 'sandbox_users');

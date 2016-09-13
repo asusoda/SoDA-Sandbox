@@ -35,6 +35,8 @@ block content
                         hr
                         form(action="/sign_up" method="post")
                             .form-group
+                                input#email.form-control(placeholder="Email" type="text" rows="1" name="email")
+                            .form-group
                                 input#username.form-control(placeholder="Username" type="text" rows="1" name="username")
                             .form-group
                                 input#password.form-control(placeholder="Password" type="password" rows="1" name="password")
