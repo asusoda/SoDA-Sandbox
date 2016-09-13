@@ -127,7 +127,7 @@ router.post('/sign_up', (req, res, next) => {
                             if (err) {
                                 next(err, req, res);
                             }
-                            else if (response.status !== 201) {
+                            else if (response.statusCode !== 201) {
                                 res.status = 500;
                                 res.render('sign_up', { 'title': 'Sign Up', errors: ['Could not create user; server erred when creating account'] });
                             }
