@@ -123,11 +123,11 @@ router.post('/sign_up', (req, res, next) => {
                         next(err, req, res, null);
                     }
                     else {
-                        request.post('http://localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, res, body) {
+                        request.post('http://localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, response, body) {
                             if (err) {
                                 next(err, req, res);
                             }
-                            else if (res.status !== 201) {
+                            else if (response.status !== 201) {
                                 res.status = 500;
                                 res.render('sign_up', { 'title': 'Sign Up', errors: ['Could not create user; server erred when creating account'] });
                             }
