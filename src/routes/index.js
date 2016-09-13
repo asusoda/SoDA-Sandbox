@@ -1,10 +1,11 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
-var models = require('../data');
-var auth = require('../auth');
-var User = models.User;
+const express = require('express');
+const router = express.Router();
+const models = require('../data');
+const auth = require('../auth');
+const request = require('request');
+const User = models.User;
 
 const whitespace_regex = /\s/;
 const password_regex = /^[a-zA-Z\d!@#\$%\^&\*\(\)]{8,}$/
@@ -122,9 +123,20 @@ router.post('/sign_up', (req, res, next) => {
                         next(err, req, res, null);
                     }
                     else {
-                        req.session.username = username;
-                        req.session.sessionID = auth.generateSessionID(username);
-                        res.send('OK');
+                        request.post('http://localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, response, body) {
+                            if (err) {
+                                next(err, req, res);
+                            }
+                            else if (response.statusCode !== 201) {
+                                res.status = 500;
+                                res.render('sign_up', { 'title': 'Sign Up', errors: ['Could not create user; server erred when creating account'] });
+                            }
+                            else {
+                                req.session.username = username;
+                                req.session.sessionID = auth.generateSessionID(username);
+                                res.send('OK');
+                            }
+                        });
                     }
                 });
             }

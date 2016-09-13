@@ -28,6 +28,9 @@ block content
             .col-sm-6.col-sm-offset-3.col-lg-4.col-lg-offset-4
                 .panel.panel-default
                     .panel-body
+                        if errors
+                            each error in errors
+                                h4= error
                         h1 Sign Up
                         hr
                         form(action="/sign_up" method="post")
