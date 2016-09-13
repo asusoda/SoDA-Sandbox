@@ -123,7 +123,7 @@ router.post('/sign_up', (req, res, next) => {
                         next(err, req, res, null);
                     }
                     else {
-                        request.post('localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, res, body) {
+                        request.post('http://localhost:7661/add_user', { json: {'username': username, 'password': password} }, function (err, res, body) {
                             if (err) {
                                 next(err, req, res);
                             }
@@ -134,7 +134,7 @@ router.post('/sign_up', (req, res, next) => {
                             else {
                                 req.session.username = username;
                                 req.session.sessionID = auth.generateSessionID(username);
-                                res.send('OK');    
+                                res.send('OK');
                             }
                         });
                     }
