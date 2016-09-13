@@ -77,9 +77,14 @@ router.post('/sign_up', (req, res, next) => {
     var username = req.body.username.trim(),
         password = req.body.password,
         password_confirm = req.body.password_confirm,
+        email = req.body.email.trim(),
         errors = [];
 
     var is_password_valid = validate_password(password);
+
+    if (!email) {
+      errors.push('Email must not be blank');
+    }
 
     if (!username) {
         errors.push('Username must not be blank');
@@ -107,16 +112,16 @@ router.post('/sign_up', (req, res, next) => {
     }
 
     else {
-        User.findOne({ username: username }, function(err, user) {
+        User.findOne({$or: [{ username: username }, { emailAddress: email }]}, function(err, user) {
             if (err) {
                 next(err, req, res, null);
             }
             else if (user) {
                 res.status = 401;
-                res.render('sign_up', { title: 'Sign Up', errors: ['Username already exists'] });
+                res.render('sign_up', { title: 'Sign Up', errors: ['Username or email already exists'] });
             }
             else {
-                var newUser = new User({ username: username });
+                var newUser = new User({ username: username, emailAddress: email });
                 newUser.setPassword(password);
                 newUser.save(function (err) {
                     if (err) {
