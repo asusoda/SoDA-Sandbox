@@ -1,5 +1,7 @@
 'use strict';
 
+global.Promise = require('bluebird');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -9,6 +11,7 @@ var bodyParser = require('body-parser');
 var helmet = require('helmet');
 var session = require('cookie-session');
 
+var models = require('./data');
 var routes = require('./routes/index');
 var apiRoutes = require('./routes/api');
 
@@ -68,6 +71,5 @@ app.use(function (err, req, res, next) {
     });
 });
 
-var models = require('./data');
 
 module.exports = app;
